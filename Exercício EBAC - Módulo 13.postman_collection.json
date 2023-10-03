@@ -1,0 +1,416 @@
+{
+	"info": {
+		"_postman_id": "a05d5cfd-b6f2-42f3-a529-edc3599a4565",
+		"name": "Exercício EBAC - Módulo 13",
+		"description": "• Subir o servidor ServeRest localhost;\n\n• Mapear os principais cenários da funcionalidade Usuários;\n\n• Considere também, pelo menos 2 cenários negativos;\n\n• Inclua asserções em todos os testes;\n\n• Fazer os testes com os principais verbos (GET, POST, DELETE, PUT);\n\n• Ao final, salvar sua collection em um arquivo .JSON;\n\n• Suba o arquivo json no seu github;\n\n• Mande o link do seu repositório na plataforma;\n\n• Daremos o feedback e orientação do seu exercício em breve.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14980019",
+		"_collection_link": "https://orange-eclipse-807969.postman.co/workspace/Estudos-EBAC-~b2509949-fbbd-4532-a227-a8053bed19c8/collection/14980019-a05d5cfd-b6f2-42f3-a529-edc3599a4565?action=share&source=collection_link&creator=14980019"
+	},
+	"item": [
+		{
+			"name": "Listar usuários cadastrados",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Validar consulta com sucesso\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Validar quantidade de usuário igual a 1 \", function () {\r",
+							"    pm.expect(pm.response.json().quantidade).to.eql(1);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/usuarios",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrar usuário com sucesso",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Usuário Cadastrado com Sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"idUsuario\", pm.response.json()._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Luísa Sonza\",\r\n  \"email\": \"luisa.sonza@cantora.com.br\",\r\n  \"password\": \"EscândaloÍntimo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/usuarios",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar usuário por ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Busca por ID realizada com sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Luísa Sonza\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrar usuário com e-mail já cadastrado",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Não realizou cadastro e informou e-mail já cadastrado\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Este email já está sendo usado\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Luísa Gerloff\",\r\n  \"email\": \"luisa.sonza@cantora.com.br\",\r\n  \"password\": \"EscândaloÍntimo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/usuarios",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Editar usuário com sucesso",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Alteração realizada com Sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Registro alterado com sucesso\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Luísa Gerloff Sonza\",\r\n  \"email\": \"luisa.sonza@cantora.com.br\",\r\n  \"password\": \"EscândaloÍntimo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir usuário cadastrado com sucesso",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Usuário excluído com sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Luísa Gerloff\",\r\n  \"email\": \"luisa.sonza@cantora.com.br\",\r\n  \"password\": \"EscândaloÍntimo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar usuário excluído por ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 400\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Consulta por id de Usuário informa não encontrado\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Usuário não encontrado\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cadastrar usuário com sucesso método PUT ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Mensagem de Sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+							"});\r",
+							"\r",
+							"pm.collectionVariables.set(\"idUsuario\", pm.response.json()._id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Luísa Gerloff Sonza\",\r\n  \"email\": \"luisa.sonza@cantora.com.br\",\r\n  \"password\": \"EscândaloÍntimo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Excluir usuário cadastrado Durante o Teste",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code é 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Usuário excluído com sucesso\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"Luísa Gerloff\",\r\n  \"email\": \"luisa.sonza@cantora.com.br\",\r\n  \"password\": \"EscândaloÍntimo\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/usuarios/{{idUsuario}}",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"usuarios",
+						"{{idUsuario}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "idUsuario",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "host",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
